@@ -25,6 +25,12 @@ fruits_to_show = my_fruit_list.loc[fruits_selected]
 # Display the table on the page.
 streamlit.dataframe(fruits_to_show)
 
+#create a repeatable code block(called a function)
+def get_fruityvice_data(this_fruit_choice)
+   fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + this_fruit_choice)
+   fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
+   return fruityvice_normalized
+    
 # New section to display FruityVice API response
 streamlit.header("Fruityvice Fruit Advice!")
 
@@ -33,8 +39,7 @@ try:
   if not fruit_choice:
     streamlit.error("Please select a fruit to get the information")
   else:
-    fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
-    fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
+    back_from_function = get_fruityvice_data(fruit_choice)
     streamlit.dataframe(fruityvice_normalized)
 
 except URLError as e:
@@ -60,3 +65,5 @@ streamlit.write("Thanks for adding " + add_my_fruit)
 
 #This will not work correctly, butjust go with it now
 my_cur.execute("insert into fruit_load_list values ('from streamlit')")
+
+
